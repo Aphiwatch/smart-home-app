@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:smart_home/Components/smart_devices_box.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,6 +10,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //smartdeviceslist [smartDevicesName, imgPath, powerStatus]
+  List mySmartDevices = [
+    ["Smart Light", true],
+    ["Smart Fan", false],
+    ["Smart Air", false],
+    ["Smart Switch", false]
+  ];
+  //power button switched
+  void powerSwitchChanged(bool value, int index){
+    setState(() {
+      mySmartDevices[index][1] = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +49,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40,vertical: 10.0),
+              padding: EdgeInsets.symmetric(horizontal: 40,vertical: 30.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -44,7 +59,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,13 +75,17 @@ class _HomePageState extends State<HomePage> {
 
             //gridview
             Expanded(child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              itemCount: mySmartDevices.length,
+              padding: const EdgeInsets.symmetric(horizontal:  25),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1/1.2
+              ),
               itemBuilder: (context, index){
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    color: Colors.black38,
-                  ),
+                return  SmartDevicesBox(
+                  smartDevicesName: mySmartDevices[index][0].toString(),
+                  powerOn: mySmartDevices[index][1],
+                  onChanged: (value) => powerSwitchChanged(value, index),
                 );
               },
             ),
